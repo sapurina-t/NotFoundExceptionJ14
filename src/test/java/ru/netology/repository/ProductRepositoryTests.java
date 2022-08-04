@@ -3,6 +3,7 @@ package ru.netology.repository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.netology.RuntimeException.AlreadyExistsException;
 import ru.netology.RuntimeException.NotFoundException;
 import ru.netology.domain.Book;
 import ru.netology.domain.Product;
@@ -31,6 +32,17 @@ public class ProductRepositoryTests {
         Product[] actual = repo.findAll();
 
         Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldNotAddAnElementWithARepeatingId() {
+        repo.save(product1);
+        repo.save(product3);
+        repo.save(product5);
+
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            repo.save(product1);
+        });
     }
 
     @Test
